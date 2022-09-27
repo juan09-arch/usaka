@@ -21,7 +21,7 @@
                     <div class="bg-welcome text-center">
                         <img src="{{ asset('img/logo_psdkp.png') }}" style="width: 100px" class="mb-3">
                         <p class="mb-0 h1 text-light">Welcome!</p>
-                        <p class="h6 mt-0 h3 text-light mb-5">Sistem Arsip PSDKP Batam</p>
+                        <p class="h6 mt-0 h3 text-light mb-5">Usaka</p>
                         <button id="start" class="btn btn-success">Login Now</button>
 
                     </div>

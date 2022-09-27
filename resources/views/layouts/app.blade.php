@@ -170,7 +170,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <a href="{{ route('dashboard.index') }}" class="brand-link">
                 <img src="{{ asset('img/logo_psdkp.png') }}" alt="AdminLTE Logo"
                     class="brand-image img-circle elevation-3">
-                <span class="brand-text font-weight-light">PSDKP Batam</span>
+                <span class="brand-text font-weight-light">USAKA</span>
             </a>
 
             <!-- Sidebar -->
