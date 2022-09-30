@@ -222,6 +222,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a href="{{ route('dashboard.project.index') }}"
                                 class="nav-link {{ request()->routeIs('dashboard.project.*') ? 'active' : '' }}">
@@ -231,6 +232,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </p>
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a href="{{ route('dashboard.team.index') }}"
                                 class="nav-link {{ request()->routeIs('dashboard.team.*') ? 'active' : '' }}">
@@ -240,6 +242,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 </p>
                             </a>
                         </li>
+                       
                         <li class="nav-item">
                             <a href="{{ route('search') }}"
                                 class="nav-link">

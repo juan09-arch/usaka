@@ -10,6 +10,7 @@ use App\Http\Controllers\LockerController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use League\CommonMark\Node\Block\Document;
@@ -54,6 +55,21 @@ Auth::routes([
 */
 Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
+
+     // ROUTE FOR TEAMS
+     Route::prefix('team')->name('team.')->group(function () {
+        Route::get('/', [TeamController::class, 'index'])->name('index');
+        Route::get("/create", [TeamController::class, 'create'])->name('create');
+        Route::post("/store", [TeamController::class, 'store'])->name('store');
+        Route::get("/edit/{id}", [TeamController::class, 'edit'])->name('edit');
+        Route::put("/update/{id}", [TeamController::class, 'update'])->name('update');
+        Route::delete('/destroy/{id}', [TeamController::class, 'destroy'])->name('destroy');
+
+        //ROUTE FOR JSON RESPONSE
+        Route::prefix('get')->name('get.')->middleware(['json-response'])->group(function () {
+            Route::post('team-datatable', [TeamController::class, 'getTeamDatatable'])->name('team-datatable');
+        });
+    });
 
     // ROUTE FOR ARCHIVE
     Route::prefix('archive')->name('archive.')->group(function () {
@@ -142,15 +158,5 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         });
     });
 
-    // ROUTE FOR TEAMS
-    Route::prefix('team')->name('team')->group(function () {
-        Route::get('/', [ProjectController::class, 'index'])->name('index');
-        Route::get("/create", [ProjectController::class, 'create'])->name('create');
-        Route::post("/store", [ProjectController::class, 'store'])->name('store');
-
-        //ROUTE FOR JSON RESPONSE
-        Route::prefix('get')->name('get.')->middleware(['json-response'])->group(function () {
-            Route::post('document-type-datatable', [DocumentTypeController::class, 'getDocumentTypeDatatable'])->name('document-type-datatable');
-        });
-    });
+   
 });

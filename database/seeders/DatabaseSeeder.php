@@ -18,7 +18,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             StorageSeeder::class,
             DocumentTypeSeeder::class,
-            ProjectSeeder::class
+            ProjectSeeder::class,
+            TeamSeeder::class
         ]);
     }
 }

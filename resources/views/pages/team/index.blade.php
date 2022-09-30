@@ -11,7 +11,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Jenis Dokumen</h1>
+                        <h1 class="m-0">Team</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                     </div><!-- /.col -->
@@ -29,15 +29,15 @@
                                 <h3 class="card-title">Jenis Dokumen</h3>
                             </div> --}}
                             <div class="card-body">
-                                <a href="{{ route("dashboard.document-type.create") }}" class="btn btn-success btn-sm mb-3">
-                                    <i class="bi bi-pen mr-2"></i></i>Buat Format
+                                <a href="{{ route("dashboard.team.create") }}" class="btn btn-success btn-sm mb-3">
+                                    <i class="bi bi-pen mr-2"></i></i>Tambah Team
                                 </a>
-                                <table id="documentFormatListTable" class="table table-bordered table-striped">
+                                <table id="teamListTable" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Nama Dokumen</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
+                                            <th>Nama</th>
+                                            <th>Role</th>
+                                            <th>Description</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -82,14 +82,14 @@
             let addUserForm = $("form#addUserForm");
             let editUserForm = $("form#editUserForm");
 
-            let documentFormatListTable = $('#documentFormatListTable').DataTable({
+            let teamListTable = $('#teamListTable').DataTable({
                 searching: true,
                 autoWidth: false,
                 processing: true,
                 serverSide: true,
                 pageLength: 10,
                 ajax: {
-                    url: "{{ route('dashboard.document-type.get.document-type-datatable') }}",
+                    url: "{{ route('dashboard.team.get.team-datatable') }}",
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
@@ -101,24 +101,24 @@
                         defaultContent: "-"
                     },
                     {
-                        data: 'created_at',
-                        name: 'created_at',
+                        data: 'role',
+                        name: 'role',
                         defaultContent: "-",
-                        render: function(data, type, row) {
-                            return moment(data).format("LLL");
-                        }
+                        // render: function(data, type, row) {
+                        //     return moment(data).format("LLL");
+                        // }
                     },
                     {
-                        data: 'updated_at',
-                        name: 'updated_at',
+                        data: 'description',
+                        name: 'description',
                         defaultContent: "-",
-                        render: function(data, type, row) {
-                            return moment(data).format("LLL");
-                        }
+                        // render: function(data, type, row) {
+                        //     return moment(data).format("LLL");
+                        // }
                     },
                     {
                         render: function(data, type, row) {
-                            var editUrl = '{{ route("dashboard.document-type.edit", ":id") }}';
+                            var editUrl = '{{ route("dashboard.team.edit", ":id") }}';
                             editUrl = editUrl.replace(':id', row.id);
 
                             // <a data-id=${row.id} name="edit" href="${editUrl}"  class="btn btn-success">
@@ -126,6 +126,9 @@
                             //     </a>
                             return `
                             <div class="form-group">
+                                <button data-id=${row.id} name="edit"  class="btn btn-success">
+                                    <i class="fas fa-edit"></i>
+                                </button>
                                 <button data-id=${row.id} name="delete" class="btn btn-danger">
                                     <i class="bi bi-trash"></i>
                                 </button>
@@ -141,12 +144,12 @@
 
 
             //delete button action
-            $(document).on("click", "table#documentFormatListTable button[name='delete']", function() {
+            $(document).on("click", "table#teamListTable button[name='delete']", function() {
                 let id = $(this).attr('data-id');
 
                 Swal.fire({
                     title: 'Apakah kamu yakin?',
-                    text: "klik yes untuk menghapus akun.",
+                    text: "klik yes untuk menghapus anggota team.",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -155,14 +158,14 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: `{{ route('dashboard.document-type.destroy', ['']) }}/${id}`,
+                            url: `{{ route('dashboard.team.destroy', ['']) }}/${id}`,
                             type: "DELETE",
                             headers: {
                                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
                             },
                             dataType: "JSON",
                             success: function(res) {
-                                documentFormatListTable.ajax.reload();
+                                teamListTable.ajax.reload();
                                 showNotification(res.message, "success", 3000);
                             },
                             error: function(res) {
@@ -176,35 +179,12 @@
 
 
             //edit button action
-            $(document).on("click", "table#documentFormatListTable button[name='edit']", function() {
+            $(document).on("click", "table#teamListTable button[name='edit']", function() {
                 let id = $(this).attr('data-id');
+                // /permintaan/show/
+                let url= `{{ route('dashboard.team.edit', ['']) }}/${id}`;
 
-                $.ajax({
-                    url: `{{ route('dashboard.user.show', ['']) }}/${id}`,
-                    type: "GET",
-                    headers: {
-                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                    },
-                    dataType: "JSON",
-                    success: function(res) {
-                        let data = res.data;
-                        editUserModal.find("input[name='name']").val(data.name);
-                        editUserModal.find("input[name='username']").val(data.username);
-                        editUserModal.find("input[name='password']").val("");
-                        editUserModal.find("input[name='password_confirm']").val("");
-
-                        editUserModal.find("select[name='role'] option").each(function() {
-                            if (data.roles[0].name == $(this).val()) {
-                                $(this).attr("selected", true);
-                            } else {
-                                $(this).removeAttr("selected");
-                            }
-                        })
-                        editUserModal.modal("toggle");
-                        editUserForm.attr("action",
-                            `{{ route('dashboard.user.update', ['']) }}/${id}`)
-                    }
-                });
+                window.open(url,'_self')
             });
 
 
