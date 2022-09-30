@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
         return $this->call([
             UserSeeder::class,
             StorageSeeder::class,
-            DocumentTypeSeeder::class
+            DocumentTypeSeeder::class,
+            ProjectSeeder::class
         ]);
     }
 }

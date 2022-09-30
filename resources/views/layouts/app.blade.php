@@ -9,7 +9,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title')</title>
-
     <script src="https://kit.fontawesome.com/3c3b5dd79d.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -220,6 +219,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <i class="bi bi-archive"></i>
                                 <p>
                                     Arsip Dokumen
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('dashboard.project.index') }}"
+                                class="nav-link {{ request()->routeIs('dashboard.project.*') ? 'active' : '' }}">
+                                <i class="bi bi-archive"></i>
+                                <p>
+                                    Project
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('dashboard.team.index') }}"
+                                class="nav-link {{ request()->routeIs('dashboard.team.*') ? 'active' : '' }}">
+                                <i class="bi bi-archive"></i>
+                                <p>
+                                    Teams
                                 </p>
                             </a>
                         </li>

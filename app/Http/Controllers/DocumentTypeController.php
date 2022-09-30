@@ -42,7 +42,7 @@ class DocumentTypeController extends Controller
      */
     public function store(Request $request)
     {
-
+        // dd($request);
         $result = [];
         $result['code'] = 400;
 

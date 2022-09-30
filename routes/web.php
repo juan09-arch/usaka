@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LockerController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use League\CommonMark\Node\Block\Document;
@@ -126,6 +127,30 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         //ROUTE FOR JSON RESPONSE
         Route::prefix('get')->name('get.')->middleware(['json-response'])->group(function () {
             Route::post('user-datatable', [UserController::class, 'getUserDatatable'])->name('user-datatable');
+        });
+    });
+
+    // ROUTE FOR PROJECT
+    Route::prefix('project')->name('project.')->group(function () {
+        Route::get('/', [ProjectController::class, 'index'])->name('index');
+        Route::get("/create", [ProjectController::class, 'create'])->name('create');
+        Route::post("/store", [ProjectController::class, 'store'])->name('store');
+
+        //ROUTE FOR JSON RESPONSE
+        Route::prefix('get')->name('get.')->middleware(['json-response'])->group(function () {
+            Route::post('document-type-datatable', [DocumentTypeController::class, 'getDocumentTypeDatatable'])->name('document-type-datatable');
+        });
+    });
+
+    // ROUTE FOR TEAMS
+    Route::prefix('team')->name('team')->group(function () {
+        Route::get('/', [ProjectController::class, 'index'])->name('index');
+        Route::get("/create", [ProjectController::class, 'create'])->name('create');
+        Route::post("/store", [ProjectController::class, 'store'])->name('store');
+
+        //ROUTE FOR JSON RESPONSE
+        Route::prefix('get')->name('get.')->middleware(['json-response'])->group(function () {
+            Route::post('document-type-datatable', [DocumentTypeController::class, 'getDocumentTypeDatatable'])->name('document-type-datatable');
         });
     });
 });
