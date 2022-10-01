@@ -151,6 +151,10 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::get('/', [ProjectController::class, 'index'])->name('index');
         Route::get("/create", [ProjectController::class, 'create'])->name('create');
         Route::post("/store", [ProjectController::class, 'store'])->name('store');
+        Route::get('/show/{id}', [ProjectController::class, 'show'])->name('show');
+        Route::get("/edit/{id}", [ProjectController::class, 'edit'])->name('edit');
+        Route::put("/update/{id}", [ProjectController::class, 'update'])->name('update');
+        Route::delete('/destroy/{id}', [ProjectController::class, 'destroy'])->name('destroy');
 
         //ROUTE FOR JSON RESPONSE
         Route::prefix('get')->name('get.')->middleware(['json-response'])->group(function () {

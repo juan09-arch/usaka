@@ -36,11 +36,11 @@
                                 <a href="{{ route("dashboard.project.create") }}" class="btn btn-success btn-sm mb-3">
                                     <i class="bi bi-pen mr-2"></i></i>Tambah Project
                                 </a>
-                                <table id="typeDocument" class="table table-bordered table-hover">
+                                <table id="project" class="table table-bordered table-hover">
                                     <thead>
                                         <tr>
                                             <th>Nama Project</th>
-                                            <th width="10%" class="text-center">Aksi</th>
+                                            <th width="25%" class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -50,10 +50,17 @@
                                                     {{ $eachProject['title'] }}
                                                 </td>
                                                 <td class="text-center">
-                                                    <a href="/dashboard/archive/{{ $eachProject['id'] }}"
+                                                    <a href="/dashboard/project/show/{{ $eachProject['id'] }}"
                                                         class="btn btn-info">
                                                         <i class="fas fa-file-alt"></i>
                                                     </a>
+                                                    <a href="/dashboard/project/edit/{{ $eachProject['id'] }}"
+                                                        class="btn btn-success">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <button data-id={{ $eachProject['id'] }} name='delete' class="btn btn-danger" > 
+                                                        <i class="bi bi-trash"></i>
+                                                </button>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -98,10 +105,44 @@
             //     "autoWidth": false,
             //     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-            $("#typeDocument").DataTable({
+            let project = $("#project").DataTable({
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false
+            })
+
+            //delete button action
+            $(document).on("click", "button[name='delete']", function() {
+                let id = $(this).attr('data-id');
+
+                Swal.fire({
+                    title: 'Apakah kamu yakin?',
+                    text: "klik yes untuk menghapus project",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `{{ route('dashboard.project.destroy', ['']) }}/${id}`,
+                            type: "DELETE",
+                            headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                            },
+                            dataType: "JSON",
+                            success: function(res) {
+                                project.ajax.reload();
+                                showNotification(res.message, "success", 3000);
+                            },
+                            error: function(res) {
+                                let data = res.responseJSON;
+                                showNotification(data.message, "error", 3000);
+                            }
+                        })
+                    }
+                })
             })
         });
     </script>

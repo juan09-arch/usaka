@@ -74,7 +74,9 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        //
+        $project = Project::find($id)->first();
+
+        return view('pages.project.show', compact(['project']));
     }
 
     /**
@@ -85,7 +87,8 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        //
+        $project = Project::where("id", $id)->first();
+        return view("pages.project.edit", compact("project"));
     }
 
     /**
@@ -97,7 +100,22 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $result = [];
+        $result['code'] = 400;
+
+        $validation = Validator::make($request->all(), Project::$rules, Project::$messages);
+
+        if (!$validation->fails()) {
+            $saveProject = Project::updateProject($request, $id);
+
+            if ($saveProject) {
+                $result['message'] = "Berhasil mengupdate project!";
+                return response()->json($result, 200);
+            }
+        }
+
+        $result['message'] = "{$validation->errors()->first()}";
+        return response()->json($result, 400);
     }
 
     /**
@@ -108,6 +126,18 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $project = Project::where("id", $id)->delete();
+            // dd($project);
+            // $project->delete();
+
+            DB::commit();
+            $result['message'] = "Berhasil menghapus project!";
+            return response()->json($result, 200);
+        } catch (Exception $e) {
+            DB::rollback();
+            $result['message'] = "Gagal menghapus project!";
+            return response()->json($result, 500);
+        }
     }
 }

@@ -42,6 +42,27 @@ class Project extends Model
             DB::rollBack();
             dd($e);
         }
+    }
+
+    public static function updateProject($request, $id)
+{
+    try {
+
+        DB::beginTransaction();
+        $project = self::where("id", $id)->first();
+        $project->title = $request->title;
+        $project->description = $request->description;
+        $project->save();
+
+        DB::commit();
+        // dd(DB::commit());
+        return true;
+    } catch (Exception $e) {
+        DB::rollBack();
+        dd($e);
+    }
+
+
 }
 
 }
