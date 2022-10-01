@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title',"PSDKP | Team")
+@section('title',"PSDKP | PROJECT IMAGE")
 
 @section('content')
 <!-- Content Wrapper. Contains page content -->
-<form method="POST" id="addTeam" action="{{ route('dashboard.team.store') }}" enctype="multipart/form-data">
+<form method="POST" id="addTeam" action="{{ route('dashboard.image.store') }}" enctype="multipart/form-data">
     @csrf
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2 justify-content-between">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Team</h1>
+                        <h1 class="m-0">Project Image</h1>
                     </div><!-- /.col -->
                     <button type="submit" class="btn btn-primary">
                         Simpan
@@ -31,37 +31,15 @@
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-group">
-                                                <label class="mr-3" for="name">Nama :</label>
-                                                <input type="text" id="name" name="name" class="form-control">
+                                                <input type="hidden" name="id_project" class="form-control" value="{{ $projectId->id }}">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-group">
-                                                <label class="mr-3" for="role">Role :</label>
-                                                <input type="text" id="role" name="role" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col">
-                                            <div class="form-group">
-                                                <label class="mr-3" for="description">Keterangan :</label>
-                                                <textarea name="description" class="wysiwyg"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-group ">
-                                                <div class="preview mb-2">
-                                                    <img id="file-ip-1-preview">
-                                                </div>
                                                 <label class="mr-3" for="file-ip-1">Upload Image</label>
-                                                <input type="file" id="file-ip-1" accept="image/*" name="image"
-                                                    onchange="showPreview(event);">
+                                                <input type="file" id="file-ip-1" accept="image/*" name="image[]" multiple>
                                             </div>
                                         </div>
                                     </div>

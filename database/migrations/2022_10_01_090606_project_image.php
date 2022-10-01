@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Team extends Migration
+class ProjectImage extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class Team extends Migration
      */
     public function up()
     {
-        Schema::create('team', function (Blueprint $table) {
+        Schema::create('projectImage', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('role');
-            $table->text('description');
             $table->string('image');
+            $table->unsignedBigInteger('id_project');
             $table->timestamps();
+            $table->foreign('id_project')->references('id')->on('project')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -30,6 +29,6 @@ class Team extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('team');
+        Schema::dropIfExists('projectImage');
     }
 }

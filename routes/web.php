@@ -10,6 +10,7 @@ use App\Http\Controllers\LockerController;
 use App\Http\Controllers\StorageController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectImageController;
 use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -69,6 +70,18 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
         Route::prefix('get')->name('get.')->middleware(['json-response'])->group(function () {
             Route::post('team-datatable', [TeamController::class, 'getTeamDatatable'])->name('team-datatable');
         });
+    });
+
+    // ROUTE FOR PROJECT IMAGE
+     Route::prefix('image')->name('image.')->group(function () {
+        // Route::get('/', [TeamController::class, 'index'])->name('index');
+        Route::get('/create/{id}', [ProjectImageController::class, 'create'])->name('create');
+        Route::post("/store", [ProjectImageController::class, 'store'])->name('store');
+        Route::get("/edit/{id}", [ProjectImageController::class, 'edit'])->name('edit');
+        Route::put("/update/{id}", [ProjectImageController::class, 'update'])->name('update');
+        Route::delete('/destroy/{id}', [ProjectImageController::class, 'destroy'])->name('destroy');
+
+        
     });
 
     // ROUTE FOR ARCHIVE

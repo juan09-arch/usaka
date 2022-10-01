@@ -4,7 +4,7 @@
 
 @section('content')
 <!-- Content Wrapper. Contains page content -->
-<form method="POST" id="addProject" action="">
+<form method="POST" id="addProject" action="{{ route('dashboard.project.store') }}" enctype="multipart/form-data">
     @csrf
     <div class="content-wrapper">
         <div class="content-header">
@@ -44,6 +44,14 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group ">
+                                                <label class="mr-3" for="file-ip-1">Upload Image</label>
+                                                <input type="file" id="file-ip-1" accept="image/*" name="image[]" multiple>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -64,36 +72,36 @@
 @push('script')
    <script>
        
-       $(function(){
+    //    $(function(){
 
-           let addProject = $("form#addProject");
+    //        let addProject = $("form#addProject");
 
 
-            addProject.on("submit",function(event){
-                event.preventDefault();
+    //         addProject.on("submit",function(event){
+    //             event.preventDefault();
 
-                let data = $(this).serialize();
+    //             let data = $(this).serialize();
                 
 
-                $.ajax({
-                    url:"{{ route('dashboard.project.store') }}",
-                    method:"POST",
-                    data:data,
-                    dataType:"JSON",
-                    success:function(res){
-                        showNotification(res.message, "success", 3000);
-                        window.location.href = "{{ route('dashboard.project.index') }}";
-                    },
-                    error:function(res){
-                        let data = res.responseJSON;
-                        showNotification(data.message, "error", 3000);
-                    }
+    //             $.ajax({
+    //                 url:"{{ route('dashboard.project.store') }}",
+    //                 method:"POST",
+    //                 data:data,
+    //                 dataType:"JSON",
+    //                 success:function(res){
+    //                     showNotification(res.message, "success", 3000);
+    //                     window.location.href = "{{ route('dashboard.project.index') }}";
+    //                 },
+    //                 error:function(res){
+    //                     let data = res.responseJSON;
+    //                     showNotification(data.message, "error", 3000);
+    //                 }
                     
-                })
-            })
+    //             })
+    //         })
 
 
-       });
+    //    });
    </script>
 @endpush
 

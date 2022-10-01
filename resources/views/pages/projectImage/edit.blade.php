@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title',"USAKA | Team")
+@section('title',"USAKA | PROJECT")
 
 @section('content')
      <!-- Content Wrapper. Contains page content -->
  <div class="content-wrapper">
 
-    <form method="POST" id="editTeam" action="{{ route('dashboard.team.update',$team->id) }}" enctype="multipart/form-data">
+    <form method="POST" id="editProject" action="{{ route('dashboard.image.update',$projectImage->id) }}" enctype="multipart/form-data">
         @csrf
         @method("PUT")
         <!-- Main content -->
@@ -20,33 +20,10 @@
                             </div>
                             <div class="card-body">
                                 <div class="row mb-4">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label class="mr-3" for="name">Nama:</label>
-                                            <input type="text" id="name" name="name" value="{{ $team->name }}" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label class="mr-3" for="role">Role:</label>
-                                            <input type="text" id="role" name="role" value="{{ $team->role }}" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-group">
-                                            <label class="mr-3" for="description">Keterangan :</label>
-                                            <input type="text" class="form-control" id="description" name="description" value="{{ $team->description }} ">
-                                        </div>
-                                    </div>
                                     <div class="col-12">
                                         <div class="form-group ">
-                                            <div class="preview mb-2">
-                                                <img id="file-ip-1-preview">
-                                                <img src="/image/{{ $team->image }}">
-                                            </div>
                                             <label class="mr-3" for="file-ip-1">Upload Image</label>
-                                            <input class="hidden" type="file" id="file-ip-1" accept="image/*" name="image"
-                                                onchange="showPreview(event);">
+                                            <input type="file" id="file-ip-1" accept="image/*" name="image">
                                         </div>
                                     </div>
                                 </div>
@@ -73,10 +50,10 @@
 @push('script')
    <script>
     //    $(function(){
-    //        let editTeam = $("form#editTeam");
+    //        let editProject = $("form#editProject");
 
       
-    //         editTeam.on("submit",function(event){
+    //         editProject.on("submit",function(event){
     //             event.preventDefault();
 
     //             let data = $(this).serialize();
@@ -89,7 +66,7 @@
     //                 dataType:"JSON",
     //                 success:function(res){
     //                     showNotification(res.message, "success", 3000);
-    //                     window.location.href = "{{ route('dashboard.team.index') }}";
+    //                     window.location.href = "{{ route('dashboard.project.index') }}";
     //                 },
     //                 error:function(res){
     //                     let data = res.responseJSON;
@@ -101,14 +78,6 @@
 
 
     //    });
-    // function showPreview(event) {
-    //             if (event.target.files.length > 0) {
-    //                 var src = URL.createObjectURL(event.target.files[0]);
-    //                 var preview = document.getElementById("file-ip-1-preview");
-    //                 preview.src = src;
-    //                 preview.style.display = "block";
-    //             }
-    //         }
    </script>
 @endpush
 

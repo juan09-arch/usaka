@@ -7,7 +7,7 @@ use App\Models\Team;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
-
+use Illuminate\Support\Facades\File;
 class TeamController extends Controller
 {
     public function __construct()
@@ -49,17 +49,32 @@ class TeamController extends Controller
         $validation = Validator::make($request->all(), Team::$rules, Team::$messages);
 
         if (!$validation->fails()) {
-            $saveTeam = Team::saveTeam($request);
-
-            if ($saveTeam) {
-                $result['message'] = "Berhasil menambahkan Team!";
-                return response()->json($result, 200);
+            try {
+                // dd($request->all());
+                DB::beginTransaction();
+    
+                $team = new Team();
+                $team->name = $request->name;
+                $team->role = $request->role;
+                $team->description = $request->description;
+    
+                if ($image = $request->file('image')) {
+                    $destinationPath = 'image/';
+                    $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+                    $image->move($destinationPath, $profileImage);
+                    $team->image = "$profileImage";
+                }
+    
+                $team->save(); 
+    
+                DB::commit();
+                return redirect()->route('dashboard.team.index');
+            } catch (Exception $e) {
+                DB::rollBack();
             }
         }
-
-
-        $result['message'] = "{$validation->errors()->first()}";
-        return response()->json($result, 400);
+        // $result['message'] = "{$validation->errors()->first()}";
+        // return response()->json($result, 400);
     }
 
     /**
@@ -96,20 +111,42 @@ class TeamController extends Controller
     {
         $result = [];
         $result['code'] = 400;
-
+        
+        dd($request);
+     
         $validation = Validator::make($request->all(), Team::$rules, Team::$messages);
 
         if (!$validation->fails()) {
-            $saveTeam = Team::updateTeam($request, $id);
+            try {
 
-            if ($saveTeam) {
-                $result['message'] = "Berhasil mengupdate team!";
-                return response()->json($result, 200);
+                $team= Team::find($id);
+               
+
+                $dataTeam = [
+                    'name' => $request->name,
+                    'role' => $request->role,
+                    'description'=>$request->description,
+                ];
+    
+                if ($image = $request->file('image') ) {
+                    $destinationPath = 'image/';
+                    $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+                    $image->move($destinationPath, $profileImage);
+                    $dataTeam['image'] = "$profileImage";
+                }else{
+                    unset($dataTeam['image']);
+                }
+                dd($dataTeam);
+                $team->update($dataTeam);
+    
+            return redirect()->route('dashboard.team.index');
+    
+            } catch (Exception $e) {
+                DB::rollback();
+                dd($e);
+    
             }
         }
-
-        $result['message'] = "{$validation->errors()->first()}";
-        return response()->json($result, 400);
     }
 
     /**

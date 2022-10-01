@@ -21,8 +21,7 @@
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
         </div>
-        <!-- /.content-header -->
-
+        <!-- /.content-header --> 
         <!-- Main content -->
         <div class="content">
             <div class="container-fluid">
@@ -37,6 +36,18 @@
                         </div>
                     </div>
                 </div>
+                
+
+        {{-- @foreach ($image as $img)
+        <div class="row mt-4">
+            <div class="card mb-3" style="max-width: 20rem">
+                <div class="card-body col">
+                    <img src="/image/{{ $img->image }}" alt="" class="card-img-top">
+                </div>
+
+            </div>
+        </div>
+        @endforeach --}}
                 <div class="row">
                     <div class="col-12">
                         <div class="card card-primary">
@@ -46,70 +57,46 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col">
-                                        <a href="/dashboard/archive/create/{{ $project->id }}"
+                                        <a href="/dashboard/image/create/{{ $project->id }}"
                                             class="btn btn-success">
                                             <i class="fas fa-plus"></i> Tambah Gambar
                                         </a>
                                     </div>
-                                    <div class="col text-right">
+                                    {{-- <div class="col text-right">
                                         <a href="{{ route('dashboard.archive.trash.document', [$project->id]) }}"
                                             class="btn btn-danger">
                                             <i class="fas fa-trash"></i>
                                         </a>
 
-                                    </div>
+                                    </div> --}}
                                 </div>
-                                <div class="row mt-3">
-                                    <div class="col">
-                                        <table id="typeDocumentById" class="table table-bordered table-hover">
-                                            {{-- <thead>
+                                <div class="card-body">
+                                    <table id="project" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Image</th>
+                                                <th width="20%" class="text-center">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($image as $eachImage)
                                                 <tr>
-                                                    <th class="text-center" style="width: 10px">No</th>
-                                                    @foreach ($inputFormat as $eachInput)
-                                                        <th style="width: auto">{{ $eachInput['name'] }}</th>
-                                                    @endforeach
-                                                    <th class="d-none">Room</th>
-                                                    <th class="d-none">Locker</th>
-                                                    <th class="d-none">Rack</th>
-                                                    <th class="d-none">Box</th>
-                                                    <th>File Document</th>
-                                                    <th width="10%" class="text-center">Aksi</th>
+                                                    <td>
+                                                        {{ $eachImage['image'] }}
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="/dashboard/image/edit/{{ $eachImage['id'] }}"
+                                                            class="btn btn-success">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <button data-id={{ $eachImage['id'] }} name='delete' class="btn btn-danger" > 
+                                                            <i class="bi bi-trash"></i>
+                                                    </button>
+                                                    </td>
                                                 </tr>
-                                            </thead> --}}
-                                            <tbody>
-                                                {{-- @foreach ($documentArchive as $i => $eachDocument)
-                                                    <tr>
-                                                        <td class="text-center">{{ $i + 1 }}</td>
-                                                        @foreach ($eachDocument->documentInfos as $eachInfo)
-                                                            <td>{{ $eachInfo['value'] }}</td>
-                                                        @endforeach
-                                                      
-                                                        <td class="d-none">{{ $eachDocument->room->name }}</td>
-                                                        <td class="d-none">{{ $eachDocument->locker->code }}</td>
-                                                        <td class="d-none">{{ $eachDocument->rack->code }}</td>
-                                                        <td class="d-none">{{ $eachDocument->box->code }}</td>
-                                                        <td class="text-center">
-                                                            <a href="/fileDocument/{{ $eachDocument->file }}"
-                                                                class="btn btn-info btn-sm" target="_blank">Download</a>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <a href="{{ route('dashboard.archive.edit.document', $eachDocument->id) }}"
-                                                                class="btn btn-warning btn-sm">Edit</a>
-                                                            <form method="POST" class="d-inline"
-                                                                onsubmit="return confirm('Move data to trash?')"
-                                                                action="{{ route('dashboard.archive.delete.document', [$eachDocument->id]) }}">
-                                                                @csrf
-                                                                <input type="hidden" value="DELETE" name="_method">
-                                                                <input type="submit" value="Delete"
-                                                                    class="btn btn-danger btn-sm">
-                                                            </form>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach --}}
-
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -141,9 +128,40 @@
 
     <script>
         $(function() {
-            $("#typeDocumentById").DataTable({
-                "responsive": true,
+            //delete button action
+            $(document).on("click", "button[name='delete']", function() {
+                let id = $(this).attr('data-id');
+
+                Swal.fire({
+                    title: 'Apakah kamu yakin?',
+                    text: "klik yes untuk menghapus gambar",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: `{{ route('dashboard.image.destroy', ['']) }}/${id}`,
+                            type: "DELETE",
+                            headers: {
+                                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                            },
+                            dataType: "JSON",
+                            success: function(res) {
+                                window.location.reload();
+                                showNotification(res.message, "success", 3000);
+                            },
+                            error: function(res) {
+                                let data = res.responseJSON;
+                                showNotification(data.message, "error", 3000);
+                            }
+                        })
+                    }
+                })
             })
+
         });
     </script>
 @endpush

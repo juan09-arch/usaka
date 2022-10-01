@@ -99,13 +99,7 @@
 
     <script>
         $(function() {
-            // $("#example1").DataTable({
-            //     "responsive": true,
-            //     "lengthChange": false,
-            //     "autoWidth": false,
-            //     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            // }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-            let project = $("#project").DataTable({
+            $("#project").DataTable({
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false
@@ -133,7 +127,7 @@
                             },
                             dataType: "JSON",
                             success: function(res) {
-                                project.ajax.reload();
+                                window.location.reload();
                                 showNotification(res.message, "success", 3000);
                             },
                             error: function(res) {

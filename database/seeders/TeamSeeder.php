@@ -18,6 +18,7 @@ class TeamSeeder extends Seeder
         $team->name = "ADI";
         $team->role = "Leader";
         $team->description = "Leading the team";
+        $team->image = "24527361.jpg";
         $team->save();
     }
 }

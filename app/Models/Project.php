@@ -15,6 +15,8 @@ class Project extends Model
 
     protected $guarded = "id";
 
+    
+
     public static $rules = [
         'title' => 'required',
         'description' => 'required',
@@ -64,5 +66,8 @@ class Project extends Model
 
 
 }
+    public function projectImage() {
+        return $this->hasMany('App\Models\ProjectImage', 'id_project', 'id');
+    }
 
 }

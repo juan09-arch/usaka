@@ -3,20 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Project;
 use App\Models\ProjectImage;
-use App\Models\DocumentType;
+use App\Models\Project;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\File;
 
-class ProjectController extends Controller
+class ProjectImageController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -24,9 +19,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $document_type = DocumentType::all();
-        $project = Project::all();
-        return view('pages.project.index', compact(['document_type','project']));
+        //
     }
 
     /**
@@ -34,10 +27,10 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        return view('pages.project.create');
-        // return view('pages.project.index', compact(['document_type','project']));
+        $projectId = Project::where('id', $id)->first();
+        return view('pages.projectImage.create', compact(['projectId']));
     }
 
     /**
@@ -48,40 +41,27 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        $result = [];
-        $result['code'] = 400;
+        $idProjek = $request->id_project;
         // dd($request->image);
-
-        $request->validate([
-                'title' => 'required',
-                'description' => 'required',
-        ]);
-
-        try {
-            $project = new Project;
-            $project->title = $request->title;
-            $project->description = $request->description;
-            $project->save();
-
       
+        try { 
+
             foreach($request->file('image') as $img){
                 $projectImage = new ProjectImage();
                 $imageName = 'image-'.time().rand(1,1000).'.'.$img->extension();
                 $img->move(public_path('image'), $imageName);
                 $projectImage->image = $imageName;
-                $projectImage->id_project = $project->id;
+                $projectImage->id_project = $request->id_project;
+                
                 $projectImage->save();
             }
         
 
         DB::commit();
-        return redirect()->route('dashboard.project.index');
+        return redirect()->route('dashboard.project.show',[$idProjek]);
         } catch (Exception $e) {
             DB::rollBack();
         }
-
-        
-
     }
 
     /**
@@ -92,11 +72,7 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        $project = Project::where('id',$id)->first();
-        // dd($project);
-        $image = ProjectImage::where('id_project', $id)->get();
-
-        return view('pages.project.show', compact(['project','image']));
+        //
     }
 
     /**
@@ -107,8 +83,8 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        $project = Project::where("id", $id)->first();
-        return view("pages.project.edit", compact("project"));
+        $projectImage = ProjectImage::where("id", $id)->first();
+        return view("pages.projectImage.edit", compact("projectImage"));
     }
 
     /**
@@ -120,22 +96,7 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $result = [];
-        $result['code'] = 400;
-
-        $validation = Validator::make($request->all(), Project::$rules, Project::$messages);
-
-        if (!$validation->fails()) {
-            $saveProject = Project::updateProject($request, $id);
-
-            if ($saveProject) {
-                $result['message'] = "Berhasil mengupdate project!";
-                return response()->json($result, 200);
-            }
-        }
-
-        $result['message'] = "{$validation->errors()->first()}";
-        return response()->json($result, 400);
+        dd($request);
     }
 
     /**
@@ -147,7 +108,7 @@ class ProjectController extends Controller
     public function destroy($id)
     {
         try {
-            $project = Project::where("id", $id)->delete();
+            $projectImage = ProjectImage::where("id", $id)->delete();
             // dd($project);
             // $project->delete();
 
@@ -159,5 +120,11 @@ class ProjectController extends Controller
             $result['message'] = "Gagal menghapus project!";
             return response()->json($result, 500);
         }
+    }
+
+    public function getImageDatatable(Request $request)
+    {
+        return DataTables::of(ProjectImage::select("*"))
+            ->make(true);
     }
 }
