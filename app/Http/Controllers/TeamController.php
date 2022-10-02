@@ -112,21 +112,17 @@ class TeamController extends Controller
         $result = [];
         $result['code'] = 400;
         
-        dd($request);
+        // dd($request);
      
-        $validation = Validator::make($request->all(), Team::$rules, Team::$messages);
+        $validation = Validator::make($request->all(), Team::$Updaterules, Team::$Updatemessages);
 
         if (!$validation->fails()) {
             try {
 
                 $team= Team::find($id);
-               
+                // dd($team);
 
-                $dataTeam = [
-                    'name' => $request->name,
-                    'role' => $request->role,
-                    'description'=>$request->description,
-                ];
+                $dataTeam = $request->all();
     
                 if ($image = $request->file('image') ) {
                     $destinationPath = 'image/';
@@ -136,7 +132,7 @@ class TeamController extends Controller
                 }else{
                     unset($dataTeam['image']);
                 }
-                dd($dataTeam);
+                // dd($dataTeam);
                 $team->update($dataTeam);
     
             return redirect()->route('dashboard.team.index');

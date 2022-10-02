@@ -96,7 +96,35 @@ class ProjectImageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request);
+        $idProjek = $request->id_project;
+        
+        try {
+
+
+            $projectImage= ProjectImage::find($id);
+            // dd($team);
+
+            $dataImageTeam = $request->all();
+
+            if ($image = $request->file('image') ) {
+                $destinationPath = 'image/';
+                $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+                $image->move($destinationPath, $profileImage);
+                $dataImage['image'] = "$profileImage";
+            }else{
+                unset($dataImage['image']);
+            }
+            // dd($dataImage);
+            $projectImage->update($dataImage);
+
+            return redirect()->route('dashboard.project.show',[$idProjek]);
+
+        } catch (Exception $e) {
+            DB::rollback();
+            dd($e);
+
+        }
+
     }
 
     /**

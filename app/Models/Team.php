@@ -12,7 +12,7 @@ class Team extends Model
 
     protected $table = 'team';
 
-    protected $guarded = "id";
+    protected $guarded = ["id"];
 
     public static $rules = [
         'name' => 'required',
@@ -20,12 +20,24 @@ class Team extends Model
         'description' => 'required',
         'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg',
     ];
+    
+    public static $Updaterules = [
+        'name' => 'required',
+        'role' => 'required',
+        'description' => 'required',
+    ];
 
     public static $messages = [
         'name.required' => 'Nama tidak boleh kosong!',
         'role.required' => 'Role tidak boleh kosong!',
         'description.required' => 'Keterangan tidak boleh kosong!',
         'image.required' => 'Gambar tidak boleh kosong!',
+    ];
+
+    public static $Updatemessages = [
+        'name.required' => 'Nama tidak boleh kosong!',
+        'role.required' => 'Role tidak boleh kosong!',
+        'description.required' => 'Keterangan tidak boleh kosong!'
     ];
 
 //     public static function saveTeam($request)

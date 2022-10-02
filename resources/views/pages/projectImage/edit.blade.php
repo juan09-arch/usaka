@@ -20,13 +20,24 @@
                             </div>
                             <div class="card-body">
                                 <div class="row mb-4">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <input type="hidden" name="id_project" value="{{ $projectImage->id_project }}" class="form-control">
+                                        </div>
+                                    </div>
                                     <div class="col-12">
                                         <div class="form-group ">
+                                            <div class="preview mb-2">
+                                                <img id="file-ip-1-preview" src="/image/{{ $projectImage->image }}">
+                                                {{-- <img src="/image/{{ $projectImage->image }}"> --}}
+                                            </div>
                                             <label class="mr-3" for="file-ip-1">Upload Image</label>
-                                            <input type="file" id="file-ip-1" accept="image/*" name="image">
+                                            <input class="hidden" type="file" id="file-ip-1" accept="image/*" name="image"
+                                                onchange="showPreview(event);">
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -49,35 +60,14 @@
 {{-- THIS SCRIPT ONLY RENDER FOR THIS PAGE --}}
 @push('script')
    <script>
-    //    $(function(){
-    //        let editProject = $("form#editProject");
-
-      
-    //         editProject.on("submit",function(event){
-    //             event.preventDefault();
-
-    //             let data = $(this).serialize();
-    //             let url = $(this).attr("action");
-                
-    //             $.ajax({
-    //                 url:url,
-    //                 method:"POST",
-    //                 data:data,
-    //                 dataType:"JSON",
-    //                 success:function(res){
-    //                     showNotification(res.message, "success", 3000);
-    //                     window.location.href = "{{ route('dashboard.project.index') }}";
-    //                 },
-    //                 error:function(res){
-    //                     let data = res.responseJSON;
-    //                     showNotification(data.message, "error", 3000);
-    //                 }
-                    
-    //             })
-    //         })
-
-
-    //    });
+    function showPreview(event) {
+                if (event.target.files.length > 0) {
+                    var src = URL.createObjectURL(event.target.files[0]);
+                    var preview = document.getElementById("file-ip-1-preview");
+                    preview.src = src;
+                    preview.style.display = "block";
+                }
+            }
    </script>
 @endpush
 

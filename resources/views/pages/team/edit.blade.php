@@ -41,8 +41,8 @@
                                     <div class="col-12">
                                         <div class="form-group ">
                                             <div class="preview mb-2">
-                                                <img id="file-ip-1-preview">
-                                                <img src="/image/{{ $team->image }}">
+                                                <img id="file-ip-1-preview" src="/image/{{ $team->image }}">
+                                                {{-- <img src="/image/{{ $team->image }}"> --}}
                                             </div>
                                             <label class="mr-3" for="file-ip-1">Upload Image</label>
                                             <input class="hidden" type="file" id="file-ip-1" accept="image/*" name="image"
@@ -101,14 +101,14 @@
 
 
     //    });
-    // function showPreview(event) {
-    //             if (event.target.files.length > 0) {
-    //                 var src = URL.createObjectURL(event.target.files[0]);
-    //                 var preview = document.getElementById("file-ip-1-preview");
-    //                 preview.src = src;
-    //                 preview.style.display = "block";
-    //             }
-    //         }
+    function showPreview(event) {
+                if (event.target.files.length > 0) {
+                    var src = URL.createObjectURL(event.target.files[0]);
+                    var preview = document.getElementById("file-ip-1-preview");
+                    preview.src = src;
+                    preview.style.display = "block";
+                }
+            }
    </script>
 @endpush
 
